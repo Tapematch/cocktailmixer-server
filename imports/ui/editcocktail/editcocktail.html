@@ -1,0 +1,58 @@
+<template name="editcocktail">
+    {{#let cocktail=cocktail}}
+    <div class="ui segment">
+        <form id="new-cocktail" class="ui form">
+            <div class="field">
+                <label>Name</label>
+                <input value="{{cocktail.name}}" type="text" name="name">
+            </div>
+            <div class="field">
+                <label>Description</label>
+                <textarea value="{{cocktail.description}}" name="description" rows="3"></textarea>
+            </div>
+            <div class="field">
+                <label>Before mixing...</label>
+                <textarea value="{{cocktail.beforeInstruction}}" name="beforeInstruction" rows="3"></textarea>
+            </div>
+            <div class="field">
+                <label>After mixing...</label>
+                <textarea value="{{cocktail.afterInstruction}}" name="afterInstruction" rows="3"></textarea>
+            </div>
+            <div class="field">
+                <label>Recipe</label>
+                <div class="ui action input">
+                    <input id="amount" type="text" size="3" placeholder="Amount">
+                    <div class="ui search selection dropdown">
+                        <input id="ingredient" type="hidden" name="ingredient">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Select Ingredient</div>
+                        <div class="menu">
+                            {{#each ingredient in ingredients}}
+                                <div class="inverted item" data-value="{{ingredient._id}}">
+                                    <span class="description">{{ingredient.vol}}% Alc.</span>
+                                    <span class="text">{{ingredient.name}}</span>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <div id="add-ingredient" class="ui button">Add</div>
+                </div>
+            </div>
+            <div class="ui middle aligned divided list">
+            {{#each part in recipe}}
+                <div class="item">
+                    <div class="right floated content">
+                        <button data-id="{{part.ingredientId}}" class="remove-ingredient negative ui icon button">
+                            <i class="minus icon"></i>
+                        </button>
+                    </div>
+                    <div class="header">{{part.amount}} ml of {{ingredientName part.ingredientId}}</div>
+                    {{ingredientVol part.ingredientId}}% Alc. Vol.
+                </div>
+            {{/each}}
+            </div>
+            <button class="ui button" type="submit">Save</button>
+        </form>
+    </div>
+    {{/let}}
+</template>

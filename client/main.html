@@ -1,0 +1,91 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Cocktailmixer</title>
+</head>
+<body>
+</body>
+
+<template name="main">
+    <div class="ui sidebar vertical menu">
+        {{#unless currentUser}}
+            <a href="/login" class="item">
+                <i class="user icon"></i> Login
+            </a>
+        {{else}}
+            <a href="/" class="item">
+                <div class="ui header">
+                    <img src="https://semantic-ui.com/images/avatar2/large/patrick.png" class="ui circular image">
+                    {{currentUser.profile.name}}
+                </div>
+            </a>
+        {{/unless}}
+        <a href="/" class="item">
+            <div class="ui header">
+                <i class="glass martini icon"></i>
+                <div class="content">
+                    Cocktails
+                    <div class="sub header">View all available Drinks</div>
+                </div>
+            </div>
+        </a>
+        <a href="/queue" class="item">
+            <div class="ui header">
+                <i class="tasks icon"></i>
+                <div class="content">
+                    Queue
+                    <div class="sub header">View Cocktails in the Queue</div>
+                </div>
+            </div>
+        </a>
+        <a href="/ingredients" class="item">
+            <div class="ui header">
+                <i class="flask icon"></i>
+                <div class="content">
+                    Ingredients
+                    <div class="sub header">Edit available ingredients</div>
+                </div>
+            </div>
+        </a>
+        <a href="/configuration" class="item">
+            <div class="ui header">
+                <i class="cogs icon"></i>
+                <div class="content">
+                    Configuration
+                    <div class="sub header">Configure your machine</div>
+                </div>
+            </div>
+        </a>
+        <a href="/log" class="item">
+            <div class="ui header">
+                <i class="list alternate outline icon"></i>
+                <div class="content">
+                    Log
+                    <div class="sub header">View protocol messages</div>
+                </div>
+            </div>
+        </a>
+        <a href="/logout" class="item">
+            <i class="sign out alternate icon"></i>
+            Logout
+        </a>
+    </div>
+    <div class="ui fixed teal inverted massive menu">
+        <div class="ui container">
+            <a id="open-sidebar" class="item">
+                <i class="content icon"></i> Menu
+            </a>
+            <div class="header item">
+                <img class="logo-img" src="/img/logo.png">
+                {{heading}}
+            </div>
+            <div class="right menu">
+                {{> Template.dynamic template=menu}}
+            </div>
+        </div>
+    </div>
+    <div class="pusher">
+        <div class="ui main container">
+            {{> Template.dynamic template=main}}
+        </div>
+    </div>
+</template>

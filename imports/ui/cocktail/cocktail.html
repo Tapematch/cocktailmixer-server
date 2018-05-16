@@ -1,0 +1,149 @@
+<template name="cocktailmenu">
+    <a href="/edit/{{cocktailId}}" class="item">
+        <i class="edit icon"></i>
+        Edit Cocktail
+    </a>
+</template>
+
+<template name="cocktail">
+    {{#let cocktail=getCocktail}}
+        <div class="ui stackable grid">
+            <div class="four wide column">
+                <div class="ui fluid card">
+                    <div class="content">
+                        <img class="ui avatar image"
+                             src="https://semantic-ui.com/images/avatar/large/elliot.jpg"> {{userName cocktail.owner}}
+                    </div>
+                    <div class="image">
+                        <img src="https://websterstyle.files.wordpress.com/2015/11/pegu-club-cocktail-portrait.jpg?w=197&h=300">
+                    </div>
+                    <div class="content">
+                        <div class="header">{{cocktail.name}}</div>
+                        <div class="description">
+                            {{cocktail.description}}
+                        </div>
+                    </div>
+                    <div class="add-to-queue ui bottom attached primary button">
+                        <i class="sign in alternate icon"></i>
+                        Add to Queue
+                    </div>
+                </div>
+            </div>
+            <div class="four wide column">
+                {{#if cocktail.beforeInstruction}}
+                    <div class="ui segments">
+                        <div class="ui segment">
+                            <h4>Before mixing...</h4>
+                        </div>
+                        <div class="ui segment">
+                            <p>{{cocktail.beforeInstruction}}</p>
+                        </div>
+                    </div>
+                {{/if}}
+                <div class="ui raised segments">
+                    <div class="ui segment">
+                        <h4>Recipe</h4>
+                    </div>
+                    {{#each cocktail.recipe}}
+                        <div class="ui segment">
+                            <p>{{amount}}ml {{ingredientName ingredientId}}</p>
+                        </div>
+                    {{/each}}
+                </div>
+                {{#if cocktail.afterInstruction}}
+                    <div class="ui segments">
+                        <div class="ui segment">
+                            <h4>After mixing...</h4>
+                        </div>
+                        <div class="ui segment">
+                            <p>{{cocktail.afterInstruction}}</p>
+                        </div>
+                    </div>
+                {{/if}}
+            </div>
+            <div class="eight wide column">
+                <div class="ui comments">
+                    <h3 class="ui dividing header">Comments</h3>
+                    <div class="comment">
+                        <a class="avatar">
+                            <img src="/images/avatar/small/matt.jpg">
+                        </a>
+                        <div class="content">
+                            <a class="author">Matt</a>
+                            <div class="metadata">
+                                <span class="date">Today at 5:42PM</span>
+                            </div>
+                            <div class="text">
+                                How artistic!
+                            </div>
+                            <div class="actions">
+                                <a class="reply">Reply</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <a class="avatar">
+                            <img src="/images/avatar/small/elliot.jpg">
+                        </a>
+                        <div class="content">
+                            <a class="author">Elliot Fu</a>
+                            <div class="metadata">
+                                <span class="date">Yesterday at 12:30AM</span>
+                            </div>
+                            <div class="text">
+                                <p>This has been very useful for my research. Thanks as well!</p>
+                            </div>
+                            <div class="actions">
+                                <a class="reply">Reply</a>
+                            </div>
+                        </div>
+                        <div class="comments">
+                            <div class="comment">
+                                <a class="avatar">
+                                    <img src="/images/avatar/small/jenny.jpg">
+                                </a>
+                                <div class="content">
+                                    <a class="author">Jenny Hess</a>
+                                    <div class="metadata">
+                                        <span class="date">Just now</span>
+                                    </div>
+                                    <div class="text">
+                                        Elliot you are always so right :)
+                                    </div>
+                                    <div class="actions">
+                                        <a class="reply">Reply</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <a class="avatar">
+                            <img src="/images/avatar/small/joe.jpg">
+                        </a>
+                        <div class="content">
+                            <a class="author">Joe Henderson</a>
+                            <div class="metadata">
+                                <span class="date">5 days ago</span>
+                            </div>
+                            <div class="text">
+                                Dude, this is awesome. Thanks so much
+                            </div>
+                            <div class="actions">
+                                <a class="reply">Reply</a>
+                            </div>
+                        </div>
+                    </div>
+                    <form class="ui reply form">
+                        <div class="field">
+                            <textarea></textarea>
+                        </div>
+                        <div class="ui blue labeled submit icon button">
+                            <i class="icon edit"></i> Add Reply
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {{/let}}
+</template>

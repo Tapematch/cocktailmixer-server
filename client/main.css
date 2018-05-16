@@ -1,0 +1,39 @@
+/* CSS declarations go here */
+body {
+    background-color: #f9fafb;
+}
+
+.main.container {
+    margin: 5em 0 1em 0;
+}
+
+.logo-img{
+    width: 26px !important;
+    margin-right: 10px !important;
+}
+
+p {
+    color: rgba(0, 0, 0, 0.87) !important;
+}
+
+.cocktail-image{
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.ui.image.top.right.attached.label img {
+    border-radius: 0em 0em 0em 0.28571429rem;
+    height: 2.3em !important;
+}
+
+.ui[class*="top attached image"].label, .ui.attached.image.label {
+    padding: 0.5833em 0.833em 0.5833em 0.5em;
+}
+
+.ui.raised.attached.segment, .ui.attached.raised.button {
+    box-shadow: 0px 2px 4px 0px rgba(34, 36, 38, 0.12), 0px 2px 10px 0px rgba(34, 36, 38, 0.15) !important;
+}

@@ -1,0 +1,108 @@
+<template name="queue">
+    <div class="ui grid">
+        {{#let queueItem=getQueueItem cocktail=getCurrentCocktail}}
+            <div class="row">
+                <div class="column">
+                    {{#if isMine queueItem.user}}
+                        <div id="start-mixing" class="ui positive top attached raised button"
+                             tabindex="0">Start Mixing
+                        </div>
+                    {{/if}}
+                    <div class="ui attached {{#if isMine queueItem.user}}raised {{/if}}segment">
+                        <div class="ui medium header">{{cocktail.name}} - {{queueItem.status}} - {{queueItem.progress}}%</div>
+                        <p>Mixing {{getQueueItem.current.amount}}ml of {{getQueueItem.current.ingredientId}}</p>
+                        <div class="ui fluid steps">
+                            {{#if cocktail.beforeInstruction}}
+                                <div class="completed step">
+                                    <div class="content">
+                                        <div class="title">Before mixing...</div>
+                                        <div class="description">{{cocktail.beforeInstruction}}</div>
+                                    </div>
+                                </div>
+                            {{/if}}
+                            <div class="active step">
+                                <div class="content">
+                                    <div class="title">Mixing</div>
+                                    {{#if isMine queueItem.user}}
+                                        <div class="description">Place Glass on Machine, Press Mixing</div>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            {{#if cocktail.afterInstruction}}
+                                <div class="disabled step">
+                                    <div class="content">
+                                        <div class="title">After mixing...</div>
+                                        <div class="description">{{cocktail.afterInstruction}}</div>
+                                    </div>
+                                </div>
+                            {{/if}}
+                        </div>
+
+                        <div class="ui image top right attached label">
+                            <img src="https://semantic-ui.com/images/avatar/small/joe.jpg">
+                            {{userName queueItem.user}}
+                        </div>
+
+
+                    </div>
+                    {{#if isMine queueItem.user}}
+                        <div id="cancel" class="ui negative bottom attached raised button"
+                             tabindex="0">Cancel
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+        {{/let}}
+
+        {{#each queue}}
+            {{> queueItem}}
+        {{/each}}
+    </div>
+</template>
+
+<template name="queueItem">
+    {{#let cocktail=getCocktail}}
+        <div class="row">
+            <div class="column">
+                <div class="ui attached {{#if isMine user}}raised {{/if}}segment">
+                    <div class="ui medium header">{{cocktail.name}}</div>
+                    <div class="ui fluid steps">
+                        {{#if cocktail.beforeInstruction}}
+                            <div class="active step">
+                                <div class="content">
+                                    <div class="title">Before mixing...</div>
+                                    <div class="description">{{cocktail.beforeInstruction}}</div>
+                                </div>
+                            </div>
+                        {{/if}}
+                        <div class="disabled step">
+                            <div class="content">
+                                <div class="title">Mixing</div>
+                            </div>
+                        </div>
+                        {{#if cocktail.afterInstruction}}
+                            <div class="step">
+                                <div class="content">
+                                    <div class="title">After mixing...</div>
+                                    <div class="description">{{cocktail.afterInstruction}}</div>
+                                </div>
+                            </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="ui image top right attached label">
+                        <img src="https://semantic-ui.com/images/avatar/small/joe.jpg">
+                        {{userName user}}
+                    </div>
+
+
+                </div>
+                {{#if isMine user}}
+                    <div class="ui negative bottom attached raised button"
+                         tabindex="0">Remove from Queue
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+    {{/let}}
+</template>

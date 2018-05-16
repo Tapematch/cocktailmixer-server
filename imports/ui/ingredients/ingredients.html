@@ -1,0 +1,85 @@
+<template name="ingredients">
+    <div class="ui segment">
+        <button id="reset-all" class="ui right floated button">Reset All</button>
+        <div class="ui divided unstackable items">
+            {{#each ingredients}}
+                {{> ingredient}}
+            {{/each}}
+        </div>
+    </div>
+    <div class="ui segment">
+        <h2 class="ui header">New Ingredient</h2>
+        <form id="new-ingredient" class="ui form">
+            <div class="ui action input">
+                <input type="text" name="name" placeholder="Name" required>
+                <button type="submit" class="ui button">Save</button>
+            </div>
+        </form>
+    </div>
+</template>
+
+<template name="ingredient">
+    <div class="item">
+        <div class="right floated">
+            <h3 class="ui header">{{name}}</h3>
+            <div class="ui right labeled input">
+                <input id="vol" value="{{vol}}" type="text" placeholder="Alc." size="2" >
+                <div class="ui basic label">
+                    %
+                </div>
+            </div>
+            <div class="ui buttons">
+                <button class="ui left labeled button">
+                    <span class="ui basic right pointing label">
+                        Pump
+                    </span>
+                    <button value="0" class="pump-button ui {{black 0}}button">
+                        None
+                    </button>
+                </button>
+                <button value="1" class="pump-button ui {{disabled 1}}{{black 1}}icon button">
+                    1
+                </button>
+                <button value="2" class="pump-button ui {{disabled 2}}{{black 2}}icon button">
+                    2
+                </button>
+                <button value="3" class="pump-button ui {{disabled 3}}{{black 3}}icon button">
+                    3
+                </button>
+                <button value="4" class="pump-button ui {{disabled 4}}{{black 4}}icon button">
+                    4
+                </button>
+                <button value="5" class="pump-button ui {{disabled 5}}{{black 5}}icon button">
+                    5
+                </button>
+                <button value="6" class="pump-button ui {{disabled 6}}{{black 6}}icon button">
+                    6
+                </button>
+                <button value="7" class="pump-button ui {{disabled 7}}{{black 7}}icon button">
+                    7
+                </button>
+                <button value="8" class="pump-button ui {{disabled 8}}{{black 8}}icon button">
+                    8
+                </button>
+                <button value="9" class="pump-button ui {{disabled 9}}{{black 9}}icon button">
+                    9
+                </button>
+                <button value="10" class="pump-button ui {{disabled 10}}{{black 10}}icon button">
+                    10
+                </button>
+                <button value="11" class="pump-button ui {{disabled 11}}{{black 11}}icon button">
+                    11
+                </button>
+                <button value="12" class="pump-button ui {{disabled 12}}{{black 12}}icon button">
+                    12
+                </button>
+                <button value="13" class="pump-button ui {{disabled 13}}{{black 13}}icon button">
+                    13
+                </button>
+                <button value="14" class="pump-button ui {{disabled 14}}{{black 14}}icon button">
+                    14
+                </button>
+            </div>
+        </div>
+    </div>
+</template>

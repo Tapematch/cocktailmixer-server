@@ -1,0 +1,44 @@
+<template name="cocktaillistmenu">
+    <a href="/new" id="new-cocktail" class="item">
+        <i class="plus icon"></i> New Cocktail
+    </a>
+</template>
+
+<template name="cocktaillist">
+    <div class="ui stackable doubling three column centered grid">
+        {{#each cocktails}}
+            {{> cocktailListItem}}
+        {{/each}}
+    </div>
+</template>
+
+<template name="cocktailListItem">
+    <a href="/cocktail/{{_id}}" class="column">
+        <div class="ui {{getStrengthColor recipe}} {{#if isMine owner}}raised {{/if}}{{#if isNotAvailable
+                                                                                           recipe}}secondary disabled {{/if}}segment">
+            <div class="ui {{getStrengthColor recipe}} top right attached label">{{getStrength recipe}}</div>
+            <div class="ui attached grid">
+                <div style="background-image: url('http://latin-mag.com/blog/wp-content/uploads/2016/03/daiquiri-kuba-original-rezept.jpg');"
+                     class="cocktail-image four wide column">
+                </div>
+                <div class="twelve wide column">
+                    <h3 class="ui header">
+                        {{name}}
+                        <div class="sub header">
+                            <div class="ui horizontal bulleted list">
+                                {{#each recipe}}
+                                    <div class="item">
+                                        {{ingredientName ingredientId}}
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </h3>
+                    <p>
+                        {{description}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </a>
+</template>

@@ -1,0 +1,27 @@
+<template name="log">
+    <table class="ui very compact table">
+        <thead>
+        <tr>
+            <th class="collapsing">Time</th>
+            <th class="collapsing">Type</th>
+            <th class="collapsing">Source</th>
+            <th>Message</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each log}}
+            {{> logentry}}
+        {{/each}}
+        </tbody>
+    </table>
+
+</template>
+
+<template name="logentry">
+    <tr class="{{type}}">
+        <td class="collapsing">{{formatDate datetime}}</td>
+        <td class="collapsing">{{type}}</td>
+        <td class="collapsing">{{source}}</td>
+        <td>{{message}}</td>
+    </tr>
+</template>
