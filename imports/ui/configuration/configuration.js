@@ -39,7 +39,7 @@ Template.configuration.helpers({
             return configuration.values;
     },
     scaleMode(){
-        return Configuration.findOne({"name": "status"}).value.scaleMode;
+        return Configuration.findOne({"name": "status"}).value.scale_mode;
     }
 });
 

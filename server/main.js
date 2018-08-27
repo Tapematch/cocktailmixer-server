@@ -61,7 +61,7 @@ Meteor.startup(() => {
     );
 
     if (Configuration.find({}).count() == 0) {
-        Configuration.insert({"name": "status", "value": {"type": "ok"}});
+        Configuration.insert({"name": "status", "value": {"type": "never_connected", "scale_mode" : false}});
         Configuration.insert({"name": "cocktail", "values": {"minamount": 20, "maxamount": 400, "maxvol": 20}});
         Configuration.insert({"name": "mixer", "values": {"glassweight": 20, "checktime": 4, "checkweight": 2, "scale_ratio": 1, "scale_offset": 0}});
         Configuration.insert({"name": "queue_enabled", "value": false});

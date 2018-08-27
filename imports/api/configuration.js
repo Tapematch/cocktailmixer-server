@@ -51,12 +51,12 @@ Meteor.methods({
     },
     'configuration.setScaleMode'() {
         let scaleMode = true;
-        if (Configuration.findOne({"name": "status"}).value.scaleMode) {
+        if (Configuration.findOne({"name": "status"}).value.scale_mode) {
             scaleMode = false;
         }
         Configuration.update({"name": "status"}, {
             $set: {
-                "value.scaleMode": scaleMode
+                "value.scale_mode": scaleMode
             }
 
         });
