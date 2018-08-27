@@ -1,0 +1,94 @@
+<template name="history">
+    <div class="ui main text container">
+
+        <div class="ui three tiny statistics">
+            <div class="statistic">
+                <div class="value">
+                    {{cocktailCount}}
+                </div>
+                <div class="label">
+                    {{_ "cocktails"}}
+                </div>
+            </div>
+            <div class="statistic">
+                <div class="value">
+                    {{totalAmount}} <span>ml</span>
+                </div>
+                <div class="label">
+                    {{_ "total"}}
+                </div>
+            </div>
+            <div class="statistic">
+                <div class="value">
+                    {{alcoholAmount}} <span>ml</span>
+                </div>
+                <div class="label">
+                    {{_ "alcohol"}}
+                </div>
+            </div>
+        </div>
+        <h4 class="ui horizontal divider header">
+            <div id="timespan-dropdown" class="ui inline dropdown">
+                <input type="hidden" name="timespan">
+                <div class="text">{{_ "last24hours"}}</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="header">{{_ "adjustTimespan"}}</div>
+                    <div class="active item" data-value="1">{{_ "last24hours"}}</div>
+                    <div class="item" data-value="7">{{_ "last7days"}}</div>
+                    <div class="item" data-value="30">{{_ "last30days"}}</div>
+                    <div class="item" data-value="0">{{_ "allTime"}}</div>
+                </div>
+            </div>
+        </h4>
+        <div class="ui hidden divider"></div>
+        <div class="ui segments">
+            {{#each history}}
+                {{> historyItem}}
+            {{/each}}
+        </div>
+    </div>
+
+    {{#if hasMore}}
+        <div id="showMoreResults" class="ui very padded basic segment">
+            <div class="ui active text loader">{{_ "loadingMore"}}</div>
+        </div>
+    {{/if}}
+</template>
+
+<template name="historyItem">
+    {{#let cocktail=getCocktail}}
+        <div class="ui segment">
+            <div class="item">
+                <div class="content">
+                    <div class="ui right floated {{getStrengthColor cocktail.recipe}} image label">
+                        {{getStrength cocktail.recipe}}
+                        <div class="detail">{{getVol cocktail.recipe}}{{_ "alcVol"}}</div>
+                    </div>
+                    <div class="ui right floated image label">
+                        {{getTotalAmount cocktail.recipe}} ml
+                    </div>
+
+                    <a href="/cocktail/{{cocktailId}}" class="ui medium header">
+                        {{cocktail.name}}
+                        {{#if cocktail.draft}}
+                            {{#if cocktail.deleted}}
+                                <div class="ui horizontal red label">
+                                    <i class="trash icon"></i> {{_ "deleted"}}
+                                </div>
+                            {{else}}
+                                <div class="ui horizontal label">
+                                    <i class="pen square icon"></i> {{_ "draft"}}
+                                </div>
+                            {{/if}}
+                        {{/if}}
+                    </a>
+                    {{#if isFavorite cocktail.favorites}}
+                        <i class="yellow star icon"></i>
+                    {{/if}}
+                    <div class="description">{{_ "mixedAt"}} {{getRelativeTime finishedAt}}</div>
+                </div>
+            </div>
+        </div>
+    {{/let}}
+</template>

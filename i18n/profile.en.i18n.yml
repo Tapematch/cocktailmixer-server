@@ -1,0 +1,19 @@
+profile: Profile
+newProfile: Profile
+welcome: Welcome to CocktailMixer!
+completeProfile: Please complete your profile, then you can choose your first cocktail.
+valuesBloodAlcohol: These values will be used only to calculate your blooad alcohol concentration!
+valuesBloodAlcoholDescription: You can keep them empty if you dont want to see these calculations.
+gender: Gender
+selectGender: Select Gender
+male: Male
+female: Female
+weight: Weight
+enterWeight: Enter your weight
+dataRecommendations: Data for recommendations
+dataRecommendationsDescription: Sort these ingredients with drag and drop descending according to your liking
+alcoholicIngredients: Alcoholic Ingredients
+onlyNonalcoholic: Recommend only nonalcoholic cocktails
+nonalcoholicIngredients: Nonalcoholic Ingredients
+selectTags: Select tags that describe cocktails you may like
+ready: I´m ready

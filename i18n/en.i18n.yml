@@ -1,0 +1,36 @@
+cocktailmixerDescription: Mix Cocktails automatically and create your own.
+cocktails: Cocktails
+login: Login
+uploading: Uploading
+beforeMixing: Before mixing...
+recipe: Recipe
+afterMixing: After mixing...
+showMore: Show more
+save: Save
+name: name
+favorites: favorites
+loadingMore: Loading more...
+alcVol: % Alc. Vol.
+or: Or
+last24hours: In the last 24 hours
+adjustTimespan: Adjust time span
+last7days: In the last 7 days
+last30days: In the last 30 days
+allTime: All time
+deleted: deleted
+draft: draft
+mixedCocktailFeed:  mixed a __cocktailLink__
+favoritedCocktailFeed:  favorited __cocktailLink__
+unfavoritedCocktailFeed:  unfavorited __cocktailLink__
+addedToQueueFeed:  added a __cocktailLink__ to the queue
+commentedCocktailFeed:  wrote a comment on __cocktailLink__
+addedImageFeed:  uploaded an image for __cocktailLink__
+createdCocktailFeed:  created a new cocktail with the name __cocktailLink__
+updatedCocktailFeed:  updated the cocktail __cocktailLink__
+uploadedProfilePictureFeed:  uploaded a new profile picture:
+nextInQueueNotification: You are next in queue!
+readyForMixing: Your __cocktailname__ is ready for mixing.
+userCommented: __user__ commented your cocktail __cocktailname__!
+fullName: Full Name
+iAgree: I've read and agree to the <a href="/privacy">Privacy Policy</a>
+privacy: Privacy Policy

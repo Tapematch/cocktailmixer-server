@@ -1,0 +1,21 @@
+cocktaillist: Cocktails
+newCocktail: New Cocktail
+yourRecommendations: Your recommendations
+basedOnFavorites: Based on your favorited cocktails
+basedOnHistory: Based on <a href="/history">cocktails you already mixed</a>
+basedOnProfile: Based on the settings in your <a href="/profile">profile</a>
+sorting: Sort
+sort: Sort
+ascending: ascending
+descending: descending
+by: by
+alcoholStrength: alcohol strength
+dateCreated: date created
+totalAmount: total amount
+filter: Filter
+showOnly: Show only
+nonalcoholicCocktails: non-alcoholic cocktails
+myFavorites: my favorites
+ownCocktails: my own cocktails
+mixableCocktails: mixable cocktails
+search: Search...

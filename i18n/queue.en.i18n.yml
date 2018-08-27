@@ -1,0 +1,25 @@
+notConnected: The CocktailMixer is not connected. Please wait for an administrator.
+startMixing: Start Mixing
+putGlass: Put your glass on the designated place to start mixing.
+finished: Finished!
+takeGlass: Please take your glass
+and: and
+canceled: Canceled
+error: There was an error. Please wait for an administrator.
+reallyCancel: Do you really want to cancel mixing this cocktail?
+yes: Yes
+no: No
+mixing: Mixing
+mixingCurrent: Mixing __amount__ml of __ingredientName__
+noPictures: This cocktails has no pictures yet.
+uploadPicture: Upload one
+cancel: Cancel
+nothingInQueue: No cocktail in queue.
+nothingInQueueDescription: Choose a cocktail and put it in the queue. Hurry, you could be the first!
+nextInQueue: Next in queue
+reallyRemove: Do you really want to remove this cocktail from the queue?
+removeFromQueue: Remove from Queue
+notAvailableAnymore: Unfortunately, not all ingredients required for this cocktail are available anymore.
+notAvailableAnymoreDescription: Please <a href="/">replace this with another one</a> or cancel.
+notAvailableAnymoreNotification: Ingredient not available anymore
+notAvailableAnymoreNotificationDescription: Unfortunately, not all ingredients required your __name__ in queue are available anymore.

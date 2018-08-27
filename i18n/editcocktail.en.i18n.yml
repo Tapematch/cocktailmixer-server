@@ -1,0 +1,28 @@
+information: Information
+description: Description
+descriptionPlaceholder: The mojito is one of the most famous rum-based highballs.
+tags: Tags
+tagsPlaceholder: sweet, creamy, white
+nameExists: There already is a cocktail with this name.
+instructions: Instructions
+beforeMixingPlaceholder: mash 3 spoons of sugar and half a lime with a muddler.
+afterMixingPlaceholder: add 2cl grenadine sirup.
+add: Add
+amount: Amount
+ingredient: Ingredient
+selectIngredient: Select Ingredient
+notAvailable: currently not available
+similarRecipeExists: There already is a cocktail with these ingredients.
+saveDraft: Save as draft
+savePublish: Save and publish
+isInQueue: This cocktail is in queue. Remove it before deleting it.
+deleteDraft: Delete draft
+nameEmpty: Please enter a name for your cocktail.
+nameLength: The name must be at least __length__ characters long.
+descriptionEmpty: Please enter a description for your cocktail.
+descriptionLength: The description must be at least __length__ characters
+tagsCount: Please add at least __count__ tags
+hasNoRecipe: Please add at least 2 different ingredients.
+notEnough: Your cocktail must have at least __minAmount__ml altogether.
+tooMuch: Your cocktail must have at most __maxAmount__ml altogether.
+isTooStrong: Your cocktail is too strong. Please reduce the alcohol content.

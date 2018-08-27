@@ -1,149 +1,203 @@
 <template name="cocktailmenu">
-    <a href="/edit/{{cocktailId}}" class="item">
-        <i class="edit icon"></i>
-        Edit Cocktail
-    </a>
+    {{#if isMine owner}}
+        <a href="/edit/{{cocktailId}}" class="item">
+            <i class="edit icon"></i> {{_ "editCocktail"}}
+        </a>
+    {{/if}}
 </template>
 
 <template name="cocktail">
-    {{#let cocktail=getCocktail}}
-        <div class="ui stackable grid">
-            <div class="four wide column">
-                <div class="ui fluid card">
-                    <div class="content">
-                        <img class="ui avatar image"
-                             src="https://semantic-ui.com/images/avatar/large/elliot.jpg"> {{userName cocktail.owner}}
-                    </div>
-                    <div class="image">
-                        <img src="https://websterstyle.files.wordpress.com/2015/11/pegu-club-cocktail-portrait.jpg?w=197&h=300">
-                    </div>
-                    <div class="content">
-                        <div class="header">{{cocktail.name}}</div>
-                        <div class="description">
-                            {{cocktail.description}}
-                        </div>
-                    </div>
-                    <div class="add-to-queue ui bottom attached primary button">
-                        <i class="sign in alternate icon"></i>
-                        Add to Queue
-                    </div>
-                </div>
-            </div>
-            <div class="four wide column">
-                {{#if cocktail.beforeInstruction}}
-                    <div class="ui segments">
-                        <div class="ui segment">
-                            <h4>Before mixing...</h4>
-                        </div>
-                        <div class="ui segment">
-                            <p>{{cocktail.beforeInstruction}}</p>
-                        </div>
-                    </div>
-                {{/if}}
-                <div class="ui raised segments">
-                    <div class="ui segment">
-                        <h4>Recipe</h4>
-                    </div>
-                    {{#each cocktail.recipe}}
-                        <div class="ui segment">
-                            <p>{{amount}}ml {{ingredientName ingredientId}}</p>
-                        </div>
-                    {{/each}}
-                </div>
-                {{#if cocktail.afterInstruction}}
-                    <div class="ui segments">
-                        <div class="ui segment">
-                            <h4>After mixing...</h4>
-                        </div>
-                        <div class="ui segment">
-                            <p>{{cocktail.afterInstruction}}</p>
-                        </div>
-                    </div>
-                {{/if}}
-            </div>
-            <div class="eight wide column">
-                <div class="ui comments">
-                    <h3 class="ui dividing header">Comments</h3>
-                    <div class="comment">
-                        <a class="avatar">
-                            <img src="/images/avatar/small/matt.jpg">
-                        </a>
+    <div class="ui main container">
+        {{#let cocktail=getCocktail}}
+            <div class="ui doubling stackable centered grid">
+                <div class="four wide column">
+                    <div class="ui fluid card">
                         <div class="content">
-                            <a class="author">Matt</a>
-                            <div class="metadata">
-                                <span class="date">Today at 5:42PM</span>
+
+                            {{#unless cocktail.draft}}
+                                <div class="ui right floated basic circular label">{{favoritesCount}}</div>
+                                <i id="favorite-cocktail" class="right floated large {{#if isFavorite cocktail.favorites}}yellow {{/if}}star icon"></i>
+                                <div class="ui inverted popup bottom right transition hidden">
+                                    {{_ "clickHereToFavorite"}}
+                                </div>
+                            {{/unless}}
+                            <img class="ui avatar image"
+                                 src="{{userPicture cocktail.owner}}"> {{userName
+                                cocktail.owner}}
+                        </div>
+                        <div class="image">
+                            <div class="swiper-container">
+                                <!-- Additional required wrapper -->
+                                <div class="swiper-wrapper">
+                                    {{#if cocktail.images}}
+                                        {{#each image in cocktail.images}}
+                                            <img class="swiper-slide" src="{{image}}">
+                                        {{/each}}
+                                    {{else}}
+                                        <img class="swiper-slide" src="/img/placeholder.jpg">
+                                    {{/if}}
+                                </div>
+                                <div class="swiper-pagination swiper-pagination-white"></div>
+                                <div class="swiper-button-prev swiper-button-white"></div>
+                                <div class="swiper-button-next swiper-button-white"></div>
                             </div>
-                            <div class="text">
-                                How artistic!
+                            <div class="ui {{getStrengthColor cocktail.recipe}} right ribbon label" style="z-index: 9;">
+                                {{getStrength cocktail.recipe}}
                             </div>
-                            <div class="actions">
-                                <a class="reply">Reply</a>
+                            <div class="ui dimmer">
+                                <div class="ui text loader">{{_ "uploading"}}</div>
+                            </div>
+                            <input type="file" id="upload-picture-input"/>
+                            <label id="upload-picture-input-label" for="upload-picture-input" class="ui left corner big label">
+                                <i class="camera icon"></i>
+                            </label>
+                        </div>
+                        <div class="content">
+                            <div class="header">{{cocktail.name}}</div>
+                            <div class="meta">
+                                {{_ "created"}} {{getRelativeTime cocktail.createdAt}}
+                            </div>
+                            <div class="description">
+                                {{cocktail.description}}
+                            </div>
+                            <div class="ui divider"></div>
+                            <div class="ui labels">
+                                {{#each tag in cocktail.tags}}
+                                    <div class="ui label">
+                                        {{tag}}
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                        <div class="popup-wrapper" data-content="{{#if isQueueDisabled}}
+                            {{_ "queueNotEnabled"}}
+                        {{else}}{{#if isNotAvailable cocktail.recipe}}
+                            {{_ "notAllIngredientsAvailable"}}
+                        {{/if}}{{/if}}" data-position="bottom center">
+                            <div class="add-to-queue ui bottom attached primary{{#if or addNotAllowed (or isQueueDisabled (isNotAvailable cocktail.recipe))}} disabled{{/if}} button">
+                                <i class="sign in alternate icon"></i>
+                                {{#if userHasItemInQueue}}
+                                    {{_ "replaceInQueue"}}
+                                {{else}}
+                                    {{_ "addToQueue"}}
+                                {{/if}}
                             </div>
                         </div>
                     </div>
-                    <div class="comment">
-                        <a class="avatar">
-                            <img src="/images/avatar/small/elliot.jpg">
-                        </a>
-                        <div class="content">
-                            <a class="author">Elliot Fu</a>
-                            <div class="metadata">
-                                <span class="date">Yesterday at 12:30AM</span>
+
+                    <div id="added-to-queue" class="ui top attached positive message transition hidden" style="text-align:center;margin-left:0;margin-right:0;">
+                        <i class="icon check"></i>
+                        {{_ "addedToQueue" place=getPlaceInQueue}}
+                    </div>
+                    <div id="replaced-in-queue" class="ui top attached positive message transition hidden" style="text-align:center;margin-left:0;margin-right:0;">
+                        <i class="icon check"></i>
+                        {{_ "replacedInQueue"}}
+                    </div>
+                    <a id="go-to-queue" href="/queue" class="ui positive bottom attached button transition hidden" style="line-height: 1.4285em;">
+                        {{_ "goToQueue"}}
+                        <i class="arrow right icon"></i>
+                    </a>
+
+                    <div id="last-mixed" class="ui top attached yellow message transition hidden" style="text-align:center;margin-left:0;margin-right:0;">
+                        <i class="question icon"></i>
+                        {{_ "lastMixed" lastMixed=lastMixed}}
+                    </div>
+                    <a id="go-to-last-mixed" href="/cocktail/{{lastMixedId}}?showFavorite=true" class="ui orange bottom attached button transition hidden" style="line-height: 1.4285em;">
+                        {{_ "favoriseOrComment"}}
+                        <i class="arrow right icon"></i>
+                    </a>
+
+                </div>
+                <div class="four wide column">
+                    {{#if cocktail.beforeInstruction}}
+                        <div class="ui segments">
+                            <div class="ui segment">
+                                <h4>{{_ "beforeMixing"}}</h4>
                             </div>
-                            <div class="text">
-                                <p>This has been very useful for my research. Thanks as well!</p>
-                            </div>
-                            <div class="actions">
-                                <a class="reply">Reply</a>
+                            <div class="ui segment">
+                                <p>{{cocktail.beforeInstruction}}</p>
                             </div>
                         </div>
-                        <div class="comments">
-                            <div class="comment">
-                                <a class="avatar">
-                                    <img src="/images/avatar/small/jenny.jpg">
-                                </a>
-                                <div class="content">
-                                    <a class="author">Jenny Hess</a>
-                                    <div class="metadata">
-                                        <span class="date">Just now</span>
-                                    </div>
-                                    <div class="text">
-                                        Elliot you are always so right :)
-                                    </div>
-                                    <div class="actions">
-                                        <a class="reply">Reply</a>
+                    {{/if}}
+                    <div class="ui raised segments">
+                        <div class="ui segment">
+                            <h4>
+                                <div style="float: right" class="ui horizontal label">{{getTotalAmount cocktail.recipe}}ml</div>
+                                {{_ "recipe"}}
+                            </h4>
+                        </div>
+                        {{#each cocktail.recipe}}
+                            <div class="ui segment">
+                                <p>{{amount}}ml {{ingredientName ingredientId}}</p>
+                            </div>
+                        {{/each}}
+                    </div>
+                    {{#if cocktail.afterInstruction}}
+                        <div class="ui segments">
+                            <div class="ui segment">
+                                <h4>{{_ "afterMixing"}}</h4>
+                            </div>
+                            <div class="ui segment">
+                                <p>{{cocktail.afterInstruction}}</p>
+                            </div>
+                        </div>
+                    {{/if}}
+                    {{#unless cocktail.draft}}
+                        <div class="ui basic center aligned segment">
+                            <a class="ui large icon button" href="mailto:?subject={{_ "shareText"}}%3A%20{{cocktail.name}}&amp;body={{getAbsoluteUrl}}cocktail%2F{{cocktail._id}}" target="_self" aria-label="">
+                                <i class="envelope outline icon"></i>
+                            </a>
+
+                            <a class="ui large green icon button" href="whatsapp://send?text={{_ "shareText"}}%3A%20{{cocktail.name}}%20{{getAbsoluteUrl}}cocktail%2F{{cocktail._id}}" target="_blank" aria-label="">
+                                <i class="whatsapp icon"></i>
+                            </a>
+
+                            <a class="ui large blue icon button" href="https://telegram.me/share/url?text={{_ "shareText"}}%3A%20{{cocktail.name}}&amp;url={{getAbsoluteUrl}}cocktail%2F{{cocktail._id}}" target="_blank" aria-label="">
+                                <i class="telegram plane icon"></i>
+                            </a>
+                        </div>
+                    {{/unless}}
+
+                </div>
+                {{#unless cocktail.draft}}
+                    <div class="eight wide column">
+                        <div class="ui comments">
+                            <h3 class="ui dividing header">{{_ "comments"}}</h3>
+                            {{#each comment in getComments}}
+                                <div class="comment">
+                                    <a class="avatar">
+                                        <img src="{{userPicture comment.user}}">
+                                    </a>
+                                    <div class="content">
+                                        <a class="author">{{userName comment.user}}</a>
+                                        <div class="metadata">
+                                            <span class="date">{{getRelativeTime comment.createdAt}}</span>
+                                        </div>
+                                        <div class="text">
+                                            {{comment.text}}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            {{/each}}
+                            {{#if hasMoreComments}}
+                                <div class="ui hidden divider"></div>
+                                <button id="show-more-comments" class="fluid ui basic button">
+                                    <i class="caret down icon"></i>
+                                    {{_ "showMore"}}
+                                </button>
+                            {{/if}}
+                            <form class="ui reply form">
+                                <div class="field">
+                                    <textarea id="comment"></textarea>
+                                </div>
+                                <div id="add-comment" class="ui blue labeled submit icon button">
+                                    <i class="icon edit"></i> {{_ "addComments"}}
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="comment">
-                        <a class="avatar">
-                            <img src="/images/avatar/small/joe.jpg">
-                        </a>
-                        <div class="content">
-                            <a class="author">Joe Henderson</a>
-                            <div class="metadata">
-                                <span class="date">5 days ago</span>
-                            </div>
-                            <div class="text">
-                                Dude, this is awesome. Thanks so much
-                            </div>
-                            <div class="actions">
-                                <a class="reply">Reply</a>
-                            </div>
-                        </div>
-                    </div>
-                    <form class="ui reply form">
-                        <div class="field">
-                            <textarea></textarea>
-                        </div>
-                        <div class="ui blue labeled submit icon button">
-                            <i class="icon edit"></i> Add Reply
-                        </div>
-                    </form>
-                </div>
+                {{/unless}}
             </div>
-        </div>
-    {{/let}}
+        {{/let}}
+    </div>
 </template>

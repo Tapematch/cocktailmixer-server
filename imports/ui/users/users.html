@@ -1,0 +1,54 @@
+<template name="users">
+    <div class="ui main container">
+        <table class="ui table">
+            <thead>
+            <tr>
+                <th>{{_ "registeredAt"}}</th>
+                <th>{{_ "name"}}</th>
+                <th>{{_ "signedInWith"}}</th>
+                <th>{{_ "online"}}</th>
+                <th class="collapsing">{{_ "admin"}}</th>
+                <th class="collapsing">{{_ "machine"}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each users}}
+                {{> user}}
+            {{/each}}
+            </tbody>
+        </table>
+        {{#if hasMore}}
+            <button id="show-more" class="fluid ui basic button">
+                <i class="caret down icon"></i>
+                {{_ "showMore"}}
+            </button>
+        {{/if}}
+    </div>
+</template>
+
+<template name="user">
+    <tr class="{{type}}">
+        <td>{{formatDate createdAt}}</td>
+        <td>{{profile.name}}</td>
+        <td>{{#if services.google}}Google{{else}}{{#if services.facebook}}Facebook{{else}}E-Mail{{/if}}{{/if}}</td>
+        <td>
+            {{#if isOnline}}
+                <i class="green circular check icon"></i>
+            {{else}}
+                <i class="red circular times icon"></i>
+            {{/if}}
+        </td>
+        <td class="collapsing">
+            <div class="ui toggle {{adminChecked}} checkbox">
+                <input class="toggle-admin" type="checkbox" {{adminChecked}}>
+                <label></label>
+            </div>
+        </td>
+        <td class="collapsing">
+            <div class="ui radio {{machineChecked}} checkbox">
+                <input class="set-machine" type="radio" name="machine" {{machineChecked}}>
+                <label></label>
+            </div>
+        </td>
+    </tr>
+</template>

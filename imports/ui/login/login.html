@@ -1,0 +1,24 @@
+<template name="login">
+    <div class="ui text container">
+        <h2 class="ui center aligned icon header">
+            <img src="/img/logo.png" class="icon">
+            <div class="content">
+                CocktailMixer
+                <div class="sub header">{{_ "cocktailmixerDescription"}}</div>
+            </div>
+        </h2>
+        <div class="ui section divider"></div>
+        {{> atForm}}
+    </div>
+</template>
+
+<template name="termsCheckbox">
+    <div class="at-input inline field">
+        <div class="ui checkbox">
+            <input type="{{type}}" id="at-field-{{_id}}" name="at-field-{{_id}}" {{disabled}}>
+            <label for="at-field-{{_id}}">
+                {{{_ "iAgree"}}}
+            </label>
+        </div>
+    </div>
+</template>

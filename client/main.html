@@ -1,91 +1,163 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Cocktailmixer</title>
+    <title>CocktailMixer</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="theme-color" content="#ffffff">
+
+    <script src="/lib/semantic.min.js"></script>
+    <link rel="stylesheet" href="/lib/semantic.min.css">
 </head>
 <body>
 </body>
 
 <template name="main">
-    <div class="ui sidebar vertical menu">
-        {{#unless currentUser}}
-            <a href="/login" class="item">
-                <i class="user icon"></i> Login
+    {{#if currentUser}}
+        <div class="ui sidebar vertical menu">
+            {{#if bloodAlocoholDataIsSet}}
+                <div class="ui fitted center aligned header">
+                    <div id="blood-alcohol-label" class="ui big {{getBloodAlcoholColor}} label">
+                        {{bloodAlcohol}} &permil;
+                        <i class="info circle icon"></i>
+                    </div>
+                    <div id="blood-alcohol-label-popup" style="width: 240px;" class="ui flowing popup bottom right transition hidden">
+                        <h4 class="ui orange header">
+                            {{_ "alcoholConcentrationPopupHeader"}}
+                            <div class="sub header">{{_ "alcoholConcentrationPopupDescription"}}</div>
+                        </h4>
+                    </div>
+                </div>
+            {{/if}}
+            <a href="/profile" class="item">
+                <div class="ui center aligned image header">
+                    <img src="{{currentUser.profile.picture}}" class="ui circular image">
+                    <div class="content">
+                        {{currentUser.profile.name}}
+                        <div class="sub header">
+                            {{_ "editProfile"}}
+                        </div>
+                    </div>
+                </div>
             </a>
-        {{else}}
-            <a href="/" class="item">
+            <a href="/" class="{{#if isRoute "cocktaillist"}}active {{/if}}item">
                 <div class="ui header">
-                    <img src="https://semantic-ui.com/images/avatar2/large/patrick.png" class="ui circular image">
-                    {{currentUser.profile.name}}
+                    <i class="glass martini icon"></i>
+                    <div class="content">
+                        {{_ "cocktails"}}
+                        <div class="sub header">{{_ "cocktailsMenuDescription"}}</div>
+                    </div>
                 </div>
             </a>
-        {{/unless}}
-        <a href="/" class="item">
-            <div class="ui header">
-                <i class="glass martini icon"></i>
-                <div class="content">
-                    Cocktails
-                    <div class="sub header">View all available Drinks</div>
+            <a href="/drafts" class="{{#if isRoute "drafts"}}active {{/if}}item">
+                <div class="ui header">
+                    <i class="pen square icon"></i>
+                    <div class="content">
+                        {{_ "drafts"}}
+                        <div class="sub header">{{_ "draftsMenuDescription"}}</div>
+                    </div>
                 </div>
-            </div>
-        </a>
-        <a href="/queue" class="item">
-            <div class="ui header">
-                <i class="tasks icon"></i>
-                <div class="content">
-                    Queue
-                    <div class="sub header">View Cocktails in the Queue</div>
-                </div>
-            </div>
-        </a>
-        <a href="/ingredients" class="item">
-            <div class="ui header">
-                <i class="flask icon"></i>
-                <div class="content">
-                    Ingredients
-                    <div class="sub header">Edit available ingredients</div>
-                </div>
-            </div>
-        </a>
-        <a href="/configuration" class="item">
-            <div class="ui header">
-                <i class="cogs icon"></i>
-                <div class="content">
-                    Configuration
-                    <div class="sub header">Configure your machine</div>
-                </div>
-            </div>
-        </a>
-        <a href="/log" class="item">
-            <div class="ui header">
-                <i class="list alternate outline icon"></i>
-                <div class="content">
-                    Log
-                    <div class="sub header">View protocol messages</div>
-                </div>
-            </div>
-        </a>
-        <a href="/logout" class="item">
-            <i class="sign out alternate icon"></i>
-            Logout
-        </a>
-    </div>
-    <div class="ui fixed teal inverted massive menu">
-        <div class="ui container">
-            <a id="open-sidebar" class="item">
-                <i class="content icon"></i> Menu
             </a>
-            <div class="header item">
-                <img class="logo-img" src="/img/logo.png">
-                {{heading}}
-            </div>
-            <div class="right menu">
-                {{> Template.dynamic template=menu}}
+            <a href="/queue" class="{{#if isRoute "queue"}}active {{/if}}item">
+                <div class="ui header">
+                    <i class="tasks icon"></i>
+                    <div class="content">
+                        {{_ "queue"}}
+                        <div class="sub header">{{_ "queueMenuDescription"}}</div>
+                    </div>
+                </div>
+            </a>
+            <a href="/history" class="{{#if isRoute "history"}}active {{/if}}item">
+                <div class="ui header">
+                    <i class="history icon"></i>
+                    <div class="content">
+                        {{_ "history"}}
+                        <div class="sub header">{{_ "historyMenuDescription"}}</div>
+                    </div>
+                </div>
+            </a>
+            <a href="/feed" class="{{#if isRoute "feed"}}active {{/if}}item">
+                <div class="ui header">
+                    <i class="large icons">
+                        <i class="users icon"></i>
+                        <i class="corner history icon"></i>
+                    </i>
+                    <div class="content">
+                        {{_ "feed"}}
+                        <div class="sub header">{{_ "feedMenuDescription"}}</div>
+                    </div>
+                </div>
+            </a>
+            {{#if isInRole 'admin'}}
+                <a href="/ingredients" class="{{#if isRoute "ingredients"}}active {{/if}}item">
+                    <div class="ui header">
+                        <i class="flask icon"></i>
+                        <div class="content">
+                            {{_ "ingredients"}}
+                            <div class="sub header">{{_ "ingredientsMenuDescription"}}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="/users" class="{{#if isRoute "users"}}active {{/if}}item">
+                    <div class="ui header">
+                        <i class="users icon"></i>
+                        <div class="content">
+                            {{_ "users"}}
+                            <div class="sub header">{{_ "usersMenuDescription"}}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="/configuration" class="{{#if isRoute "configuration"}}active {{/if}}item">
+                    <div class="ui header">
+                        <i class="cogs icon"></i>
+                        <div class="content">
+                            {{_ "configuration"}}
+                            <div class="sub header">{{_ "configurationMenuDescription"}}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="/log" class="{{#if isRoute "log"}}active {{/if}}item">
+                    <div class="ui header">
+                        <i class="list alternate outline icon"></i>
+                        <div class="content">
+                            {{_ "log"}}
+                            <div class="sub header">{{_ "logMenuDescription"}}</div>
+                        </div>
+                    </div>
+                </a>
+                <div class="item">
+                    <div class="ui toggle {{queueChecked}} checkbox">
+                        <input id="enable-queue" type="checkbox" name="public" {{queueChecked}}>
+                        <label>{{_ "enableQueue"}}</label>
+                    </div>
+                </div>
+            {{/if}}
+            <a href="/logout" class="item">
+                <i class="sign out alternate icon"></i>
+                {{_ "logout"}}
+            </a>
+        </div>
+        <div class="ui fixed blue inverted huge menu">
+            <div class="ui container">
+                <a id="open-sidebar" class="mobile item">
+                    <i class="content icon"></i><span>{{_ "menu"}}</span>
+                </a>
+                <div class="header item">{{_ routeName}}</div>
+                <div class="right menu">
+                    {{> Template.dynamic template=menu}}
+                </div>
             </div>
         </div>
-    </div>
+    {{/if}}
     <div class="pusher">
-        <div class="ui main container">
-            {{> Template.dynamic template=main}}
-        </div>
+        {{#HammerTouchArea gestureMap=templateGestures}}
+            <div class="hammer-touch-area">
+                {{> Template.dynamic template=main}}
+            </div>
+        {{/HammerTouchArea}}
     </div>
 </template>

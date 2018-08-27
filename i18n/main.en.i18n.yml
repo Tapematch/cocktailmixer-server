@@ -1,0 +1,28 @@
+menu: Menü
+alcoholConcentrationPopupHeader: This is your estimated blood alcohol concentration.
+alcoholConcentrationPopupDescription: This value is not exact. You are responsible for your own actions!
+editProfile: Edit your profile
+cocktailsMenuDescription: View all available Drinks
+drafts: Drafts
+draftsMenuDescription: Your unpublished cocktails
+queue: Queue
+queueMenuDescription: View Cocktails in the Queue
+history: History
+historyMenuDescription: Previously mixed Cocktails
+feed: Feed
+feedMenuDescription: See what others are doing
+ingredients: Ingredients
+ingredientsMenuDescription: Edit available ingredients
+users: Users
+usersMenuDescription: Manage users
+configuration: Configuration
+configurationMenuDescription: Configure your machine
+log: Log
+logMenuDescription: View protocol messages
+enableQueue: Enable Queue
+logout: Logout
+extraStrong: extra strong
+strong: strong
+medium: medium
+weak: weak
+nonalcoholic: nonalcoholic

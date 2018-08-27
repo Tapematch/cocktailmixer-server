@@ -1,29 +1,165 @@
 <template name="cocktaillistmenu">
     <a href="/new" id="new-cocktail" class="item">
-        <i class="plus icon"></i> New Cocktail
+        <i class="plus icon"></i><span>{{_ "newCocktail"}}</span>
     </a>
 </template>
 
 <template name="cocktaillist">
-    <div class="ui stackable doubling three column centered grid">
-        {{#each cocktails}}
-            {{> cocktailListItem}}
-        {{/each}}
+    <div class="ui main container">
+        {{#if or getRecommendationsFromFavorites getRecommendationsFromHistory getRecommendationsFromProfile}}
+            <div class="ui accordion">
+                <div class="{{#if showRecommendations}}active {{/if}}title">
+                    <i class="right floated dropdown icon"></i>
+                    <h4 class="ui horizontal divider section header">
+                        <i class="heart outline icon"></i>
+                        {{_ "yourRecommendations"}}
+                    </h4>
+                </div>
+                <div class="{{#if showRecommendations}}active {{/if}} content">
+                    <div class="ui stackable doubling three column centered grid">
+
+                        {{#each getRecommendationsFromProfile}}
+                            <div class="column">
+                                {{> cocktailListItem}}
+                                <div class="ui bottom attached tiny message">
+                                    {{{_ "basedOnProfile"}}}
+                                </div>
+                            </div>
+                        {{/each}}
+                        {{#each getRecommendationsFromFavorites}}
+                            <div class="column">
+                                {{> cocktailListItem}}
+                                <div class="ui bottom attached tiny message">
+                                    {{{_ "basedOnFavorites"}}}
+                                </div>
+                            </div>
+                        {{/each}}
+                        {{#each getRecommendationsFromHistory}}
+                            <div class="column">
+                                {{> cocktailListItem}}
+                                <div class="ui bottom attached tiny message">
+                                    {{{_ "basedOnHistory"}}}
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+            <div class="ui hidden divider"></div>
+        {{/if}}
+        <div class="ui menu">
+            <a id="show-sort" class="mobile item">
+                <i class="sort amount down icon"></i><span>{{_ "sorting"}}</span>
+            </a>
+            <div id="sort-popup" class="ui flowing popup">
+                {{_ "sort"}}
+                <div id="sort-order" class="ui inline dropdown">
+                    <input type="hidden" name="sort-order">
+                    <div class="text">{{_ "ascending"}}</div>
+                    <i class="dropdown icon"></i>
+                    <div style="flex-direction: column !important;" class="menu">
+                        <div class="active item" data-text="{{_ "ascending"}}" data-value="1">
+                            <i class="sort alphabet down icon"></i>{{_ "ascending"}}
+                        </div>
+                        <div class="item" data-text="{{_ "descending"}}" data-value="-1">
+                            <i class="sort alphabet up icon"></i>{{_ "descending"}}
+                        </div>
+                    </div>
+                </div>
+                {{_ "by"}}
+                <div id="sort-by" class="ui inline dropdown">
+                    <input type="hidden" name="sort-by">
+                    <div class="text">{{_ "name"}}</div>
+                    <i class="dropdown icon"></i>
+                    <div style="flex-direction: column !important;" class="menu">
+                        <div class="active item" data-text="name" data-value="name"><i class="font icon"></i>{{_ "name"}}</div>
+                        <div class="item" data-text="{{_ "alcoholStrength"}}" data-value="alcVol">
+                            <i class="percent icon"></i>
+                            {{_ "alcoholStrength"}}
+                        </div>
+                        <div class="item" data-text="{{_ "favorites"}}" data-value="favoriteCount">
+                            <i class="star icon"></i>
+                            {{_ "favorites"}}
+                        </div>
+                        <div class="item" data-text="{{_ "dateCreated"}}" data-value="createdAt">
+                            <i class="calendar icon"></i>
+                            {{_ "dateCreated"}}
+                        </div>
+                        <div class="item" data-text="{{_ "totalAmount"}}" data-value="totalAmount">
+                            <i class="tint icon"></i>
+                            {{_ "totalAmount"}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a id="show-filter" class="mobile item">
+                <i class="filter icon"></i><span>{{_ "filter"}}</span>
+            </a>
+            <div id="filter-popup" class="ui flowing popup bottom right transition hidden">
+                <div class="ui form">
+                    <div class="grouped fields">
+                        <label>{{_ "showOnly"}}</label>
+                        <div class="field">
+                            <div id="filter-alcoholic-slider" class="ui slider checkbox">
+                                <input id="filter-alcoholic" type="checkbox">
+                                <label>{{_ "nonalcoholicCocktails"}}</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div id="filter-favorites-slider" class="ui slider checkbox">
+                                <input id="filter-favorites" type="checkbox">
+                                <label>{{_ "myFavorites"}}</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div id="filter-own-slider" class="ui slider checkbox">
+                                <input id="filter-own" type="checkbox">
+                                <label>{{_ "ownCocktails"}}</label>
+                            </div>
+                        </div>
+                        {{#if areIngredientsSet}}
+                            <div class="field">
+                                <div id="filter-mixable-slider" class="ui slider checkbox">
+                                    <input id="filter-mixable" type="checkbox">
+                                    <label>{{_ "mixableCocktails"}}</label>
+                                </div>
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="right menu">
+                <div class="ui category search item">
+                    <div class="ui transparent icon input">
+                        <input id="search" class="prompt" type="text" value="{{searchTerm}}" placeholder="{{_ "search..."}}">
+                        <i class="search link icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui hidden divider"></div>
+        <div class="ui stackable doubling three column centered grid">
+            {{#each cocktails}}
+                <div class="column">
+                    {{> cocktailListItem}}
+                </div>
+            {{/each}}
+        </div>
+        {{#if hasMore}}
+            <div id="showMoreResults" class="ui very padded basic segment">
+                <div class="ui active text loader">{{_ "loadingMore"}}</div>
+            </div>
+        {{/if}}
     </div>
 </template>
 
 <template name="cocktailListItem">
-    <a href="/cocktail/{{_id}}" class="column">
-        <div class="ui {{getStrengthColor recipe}} {{#if isMine owner}}raised {{/if}}{{#if isNotAvailable
-                                                                                           recipe}}secondary disabled {{/if}}segment">
-            <div class="ui {{getStrengthColor recipe}} top right attached label">{{getStrength recipe}}</div>
+    <a href="/cocktail/{{_id}}">
+        <div class="ui top attached {{getStrengthColor recipe}} {{#if isMine owner}}raised {{/if}}{{#if and areIngredientsSet (isNotAvailable recipe)}}secondary disabled {{/if}}segment">
             <div class="ui attached grid">
-                <div style="background-image: url('http://latin-mag.com/blog/wp-content/uploads/2016/03/daiquiri-kuba-original-rezept.jpg');"
-                     class="cocktail-image four wide column">
-                </div>
-                <div class="twelve wide column">
+                <div class="{{#if images}}twelve {{else}}sixteen {{/if}}wide column">
                     <h3 class="ui header">
-                        {{name}}
+                        {{name}}{{#if isFavorite favorites}} <i class="yellow star inline icon"></i>{{/if}}
                         <div class="sub header">
                             <div class="ui horizontal bulleted list">
                                 {{#each recipe}}
@@ -38,6 +174,12 @@
                         {{description}}
                     </p>
                 </div>
+                {{#if images}}
+                    <div style="background-image: url('{{toThumbnail images.[0]}}');"
+                         class="cocktail-image four wide column">
+                    </div>
+                {{/if}}
+                <div class="ui {{getStrengthColor recipe}} top right attached label">{{getStrength recipe}}</div>
             </div>
         </div>
     </a>

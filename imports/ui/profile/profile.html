@@ -1,0 +1,139 @@
+<template name="profile">
+    <div class="ui main container">
+        {{#if isNewProfile}}
+            <div class="ui success icon message">
+                <i class="user plus icon"></i>
+                <div class="content">
+                    <div class="header">
+                        {{_ "welcome"}}
+                    </div>
+                    <p>{{_ "completeProfile"}}</p>
+                </div>
+            </div>
+            <div class="ui hidden divider"></div>
+        {{/if}}
+        <div class="ui stackable grid">
+            <div class="four wide column">
+                <div class="ui fluid card">
+                    <div class="image">
+                        <div class="ui dimmer">
+                            <div class="ui text loader">{{_ "uploading"}}</div>
+                        </div>
+                        <input type="file" id="upload-picture-input"/>
+                        <label for="upload-picture-input" class="ui right corner big label">
+                            <i class="camera icon"></i>
+                        </label>
+                        <img src="{{currentUser.profile.picture}}">
+                    </div>
+                    <div class="content">
+                        <div class="ui transparent input header">
+                            <input id="name-input" type="text" placeholder="Name" value="{{currentUser.profile.name}}">
+                        </div>
+                    </div>
+                </div>
+                {{> i18n_dropdown_semantic}}
+            </div>
+            <div class="twelve wide column">
+                <div class="ui attached warning message">
+                    <div class="header">
+                        {{_ "valuesBloodAlcohol"}}
+                    </div>
+                    <p>{{_ "valuesBloodAlcoholDescription"}}</p>
+                </div>
+                <form class="ui form attached fluid segment">
+                    <div class="two fields">
+                        <div class="field">
+                            <label>{{_ "gender"}}</label>
+                            <div id="gender-dropdown" class="ui selection dropdown">
+                                <input type="hidden" name="gender">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">{{_ "selectGender"}}</div>
+                                <div class="menu">
+                                    <div class="item" data-value="male"><i class="male icon"></i>{{_ "male"}}</div>
+                                    <div class="item" data-value="female"><i class="female icon"></i>{{_ "female"}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>{{_ "weight"}}</label>
+                            <div class="ui right labeled input">
+                                <input id="weight-input" type="number" placeholder="{{_ "enterWeight"}}"
+                                       value="{{currentUser.profile.weight}}">
+                                <div class="ui basic label">
+                                    kg
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="ui hidden divider"></div>
+                <div class="ui attached message">
+                    <div class="header">
+                        {{_ "dataRecommendations"}}
+                    </div>
+                    {{_ "dataRecommendationsDescription"}}
+                </div>
+                <div class="ui attached fluid segment">
+                    <div class="ui stackable two column grid">
+                        <div class="column">
+                            <h4 class="ui dividing header">
+                                {{_ "alcoholicIngredients"}}
+                            </h4>
+                            <div id="only-nonalcoholic-slider" class="ui slider checkbox">
+                                <input id="only-nonalcoholic" type="checkbox" name="public">
+                                <label>{{_ "onlyNonalcoholic"}}</label>
+                            </div>
+                            <div style="{{#if
+                                    currentUser.profile.recommendationData.onlyNonalcoholic}}display:none;{{/if}}"
+                                 id="alcoholic-ingredient-list" class="ui relaxed divided ordered list">
+                                {{#each alcoholicIngredient in getAlcoholicIngredients}}
+                                    <div data-id="{{alcoholicIngredient._id}}" class="item">
+                                        <i class="big handle bars middle aligned icon"></i>
+                                        <div class="content">
+                                            <div class="header">{{alcoholicIngredient.name}}</div>
+                                            <div class="description">{{alcoholicIngredient.vol}}{{_ "alcVol"}}</div>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                        <div class="column">
+                            <h4 class="ui dividing header">
+                                {{_ "nonalcoholicIngredients"}}
+                            </h4>
+                            <div id="nonalcoholic-ingredient-list" class="ui relaxed divided ordered list">
+                                {{#each nonalcoholicIngredient in getNonalcoholicIngredients}}
+                                    <div data-id="{{nonalcoholicIngredient._id}}" class="item">
+                                        <i class="big handle bars middle aligned icon"></i>
+                                        <div class="content">
+                                            <div class="header">{{nonalcoholicIngredient.name}}</div>
+                                            <div class="description">{{nonalcoholicIngredient.vol}}{{_ "alcVol"}}</div>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui attached message">
+                    {{_ "selectTags"}}
+                </div>
+                <div class="ui attached fluid segment">
+                    <div class="ui large labels">
+                        {{#each tag in getTags}}
+                            <a data-tag="{{tag}}" class="ui selectable {{#if isTagSelected tag}}blue {{/if}}label">
+                                {{tag}}
+                            </a>
+                        {{/each}}
+                    </div>
+                </div>
+                {{#if isNewProfile}}
+                    <a href="/" class="ui bottom attached large positive button">
+                        <i class="right arrow icon"></i>
+                        {{_ "ready"}}
+                    </a>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</template>

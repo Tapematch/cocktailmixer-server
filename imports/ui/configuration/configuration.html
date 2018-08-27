@@ -1,12 +1,185 @@
 <template name="configuration">
-    <div class="ui right labeled input">
-        <label for="minamount" class="ui label">Min Amount</label>
-        <input id="minamount" type="number" step="1" value="20">
-        <div class="ui basic label">ml</div>
-    </div>
-    <div class="ui right labeled input">
-        <label for="maxamount" class="ui label">Max Amount</label>
-        <input id="maxamount" type="number" step="1" value="200">
-        <div class="ui basic label">ml</div>
+    <div class="ui main container">
+        <div id="start-calibrating-modal" class="ui mini modal">
+            <div class="header">{{_ "calibrateScale"}}</div>
+            <div class="content">
+                <p>{{_ "startCalibrateInstructions"}}</p>
+            </div>
+            <div class="actions">
+                <div class="ui positive button">{{_ "start"}}</div>
+                <div class="ui negative button">{{_ "cancel"}}</div>
+            </div>
+        </div>
+        <div id="calibrating-modal" class="ui mini modal">
+            <div class="header">{{_ "calibrateScale"}}</div>
+            <div class="content">
+                <p>{{_ "calibrateInstructions"}}</p>
+            </div>
+            <div class="actions">
+                <div class="ui positive button">{{_ "calibrateScale"}}</div>
+            </div>
+        </div>
+        {{#if isMachineOnline}}
+            <div class="ui middle aligned stackable grid">
+                <div class="eight wide column">
+                    {{#if isStatus "idle"}}
+                        <div class="ui positive icon message">
+                            <i class="check icon"></i>
+                            <div class="content">
+                                <div class="header">
+                                    {{_ "idle"}}
+                                </div>
+                                <p>{{_ "idleDescription"}}</p>
+                            </div>
+                        </div>
+                    {{/if}}
+                    {{#if isStatus "mixing"}}
+                        <div class="ui positive icon message">
+                            <i class="glass martini icon"></i>
+                            <div class="content">
+                                <div class="header">
+                                    {{_ "mixing"}}
+                                </div>
+                                <p>{{_ "mixingDescription"}}</p>
+                            </div>
+                        </div>
+                    {{/if}}
+                    {{#if isStatus "tare"}}
+                        <div class="ui positive icon message">
+                            <i class="check icon"></i>
+                            <div class="content">
+                                <div class="header">
+                                    {{_ "tare"}}
+                                </div>
+                                <p>{{_ "tareDescription"}}</p>
+                            </div>
+                        </div>
+                    {{/if}}
+                    {{#if isStatus "ingredient_empty"}}
+                        <div class="ui negative icon message">
+                            <i class="exclamation triangle icon"></i>
+                            <div class="content">
+                                <div class="ui stackable middle aligned grid">
+                                    <div class="nine wide column">
+                                        <div class="header">
+                                            {{_ "ingredientEmptyHeader"}}
+                                        </div>
+                                        <p>
+                                            {{getErrorText}}
+                                        </p>
+                                    </div>
+                                    <div class="seven wide column">
+                                        <div class="ui vertical fluid buttons">
+                                            <button id="refilled-button" class="ui positive button">{{_ "refilled"}}</button>
+                                            <button id="not-available-button" class="ui negative button">{{_ "ingredientNotAvailable"}}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {{/if}}
+                </div>
+                <div class="eight wide column">
+                    <div class="ui middle aligned centered grid">
+                        <div class="eight wide column">
+                            <div id="scale-mode" class="ui basic fluid labeled icon {{#unless isStatus "idle"}}disabled {{/unless}} button">
+                                <i class="tachometer alternate icon"></i>
+                                {{#if scaleMode}}
+                                    <div class="ui one tiny statistics">
+                                        <div class="statistic">
+                                            <div class="value">
+                                                {{currentWeight}}
+                                            </div>
+                                            <div class="label">
+                                                {{_ "gram"}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{else}}
+                                    {{_ "activateScaleMode"}}
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="eight wide column">
+                            <div class="ui vertical labeled icon basic fluid buttons">
+                                <button id="tare-scale" class="ui {{#unless isStatus "idle"}}disabled {{/unless}}{{#if isStatus "tare"}}loading {{/if}}button">
+                                    <i class="undo icon"></i>
+                                    {{_ "tareScale"}}
+                                </button>
+                                <button id="calibrate-scale" class="ui {{#unless isStatus "idle"}}disabled {{/unless}}button">
+                                    <i class="balance scale icon"></i>
+                                    {{_ "calibrateScale"}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            <div class="ui icon message">
+                <i class="plug icon"></i>
+                <div class="content">
+                    <div class="header">
+                        {{_ "notConnectedStatus"}}
+                    </div>
+                    <p>{{_ "notConnectedDescription"}}</p>
+                </div>
+            </div>
+        {{/if}}
+        <div class="ui hidden divider"></div>
+        <form class="ui form">
+            <h3 class="ui dividing header">{{_ "cocktailSettings"}}</h3>
+            {{#let cocktailSettings=getCocktailSettings}}
+                <div class="three fields">
+                    <div class="field">
+                        <label>{{_ "minAmount"}}</label>
+                        <div class="ui right labeled input">
+                            <input id="minamount-input" type="number" step="1" value="{{cocktailSettings.minamount}}">
+                            <div class="ui basic label">ml</div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>{{_ "maxAmount"}}</label>
+                        <div class="ui right labeled input">
+                            <input id="maxamount-input" type="number" step="1" value="{{cocktailSettings.maxamount}}">
+                            <div class="ui basic label">ml</div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>{{_ "maxVol"}}</label>
+                        <div class="ui right labeled input">
+                            <input id="maxvol-input" type="number" step="1" value="{{cocktailSettings.maxvol}}">
+                            <div class="ui basic label">%</div>
+                        </div>
+                    </div>
+                </div>
+            {{/let}}
+            <h3 class="ui dividing header">{{_ "mixerSettings"}}</h3>
+            {{#let mixerSettings=getMixerSettings}}
+                <div class="three fields">
+                    <div class="field">
+                        <label>{{_ "minGlassWeight"}}</label>
+                        <div class="ui right labeled input">
+                            <input id="glassweight-input" type="number" step="1" value="{{mixerSettings.glassweight}}">
+                            <div class="ui basic label">g</div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>{{_ "checkIngredientTime"}}</label>
+                        <div class="ui right labeled input">
+                            <input id="checktime-input" type="number" step="1" value="{{mixerSettings.checktime}}">
+                            <div class="ui basic label">{{_ "seconds"}}</div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>{{_ "checkIngredientsWeight"}}</label>
+                        <div class="ui right labeled input">
+                            <input id="checkweight-input" type="number" step="1" value="{{mixerSettings.checkweight}}">
+                            <div class="ui basic label">ml</div>
+                        </div>
+                    </div>
+                </div>
+            {{/let}}
+        </form>
     </div>
 </template>

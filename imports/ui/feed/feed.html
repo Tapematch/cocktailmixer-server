@@ -1,0 +1,83 @@
+<template name="feed">
+    <div class="ui main text container">
+
+        <div class="ui three tiny statistics">
+            <div class="statistic">
+                <div class="value">
+                    {{cocktailMixedCount}}
+                </div>
+                <div class="label">
+                    {{_ "mixed"}}
+                </div>
+            </div>
+            <div class="statistic">
+                <div class="value">
+                    {{cocktailFavoritedCount}}
+                </div>
+                <div class="label">
+                    {{_ "favorited"}}
+                </div>
+            </div>
+            <div class="statistic">
+                <div class="value">
+                    {{cocktailCreatedCount}}
+                </div>
+                <div class="label">
+                    {{_ "created"}}
+                </div>
+            </div>
+        </div>
+        <h4 class="ui horizontal divider header">
+            <div id="timespan-dropdown" class="ui inline dropdown">
+                <input type="hidden" name="timespan">
+                <div class="text">{{_ "last24hours"}}</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div class="header">{{_ "adjustTimespan"}}</div>
+                    <div class="active item" data-value="1">{{_ "last24hours"}}</div>
+                    <div class="item" data-value="7">{{_ "last7days"}}</div>
+                    <div class="item" data-value="30">{{_ "last30days"}}</div>
+                    <div class="item" data-value="0">{{_ "allTime"}}</div>
+                </div>
+            </div>
+        </h4>
+        <div class="ui hidden divider"></div>
+        <div class="ui large feed">
+            {{#each feed}}
+                {{> feedItem}}
+            {{/each}}
+        </div>
+    </div>
+
+    {{#if hasMore}}
+        <div id="showMoreResults" class="ui very padded basic segment">
+            <div class="ui active text loader">{{_ "loadingMore"}}</div>
+        </div>
+    {{/if}}
+</template>
+
+<template name="feedItem">
+    <div class="event">
+        <div class="label">
+            <img src="{{userPicture user}}">
+        </div>
+        <div class="content">
+            <div class="date">
+                {{getRelativeTime datetime}}
+            </div>
+            <div class="summary">
+                <a>{{userName user}}</a> {{{getSummary}}}
+            </div>
+            {{#if content}}
+            <div class="extra text">
+                {{content}}
+            </div>
+            {{/if}}
+            {{#if image}}
+            <div class="extra images">
+                <img src="{{image}}">
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</template>

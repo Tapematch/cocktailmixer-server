@@ -1,58 +1,181 @@
 <template name="editcocktail">
-    {{#let cocktail=cocktail}}
-    <div class="ui segment">
-        <form id="new-cocktail" class="ui form">
-            <div class="field">
-                <label>Name</label>
-                <input value="{{cocktail.name}}" type="text" name="name">
-            </div>
-            <div class="field">
-                <label>Description</label>
-                <textarea value="{{cocktail.description}}" name="description" rows="3"></textarea>
-            </div>
-            <div class="field">
-                <label>Before mixing...</label>
-                <textarea value="{{cocktail.beforeInstruction}}" name="beforeInstruction" rows="3"></textarea>
-            </div>
-            <div class="field">
-                <label>After mixing...</label>
-                <textarea value="{{cocktail.afterInstruction}}" name="afterInstruction" rows="3"></textarea>
-            </div>
-            <div class="field">
-                <label>Recipe</label>
-                <div class="ui action input">
-                    <input id="amount" type="text" size="3" placeholder="Amount">
-                    <div class="ui search selection dropdown">
-                        <input id="ingredient" type="hidden" name="ingredient">
-                        <i class="dropdown icon"></i>
-                        <div class="default text">Select Ingredient</div>
-                        <div class="menu">
-                            {{#each ingredient in ingredients}}
-                                <div class="inverted item" data-value="{{ingredient._id}}">
-                                    <span class="description">{{ingredient.vol}}% Alc.</span>
-                                    <span class="text">{{ingredient.name}}</span>
+    <div class="ui main container">
+        {{#let cocktail=cocktail}}
+
+            <form id="new-cocktail" class="ui form">
+                <div class="ui stackable three column centered grid">
+                    <div class="column">
+                        <div class="ui fluid vertical accordion menu">
+                            <div class="item">
+                                <a class="{{#if or isNewCocktail (not cocktail.draft)}}active {{/if}}title">
+                                    <i class="dropdown icon"></i>
+                                    <h4 class="ui header">
+                                        <i class="info circle icon"></i>
+                                        <div class="content">
+                                            {{_ "information"}}
+                                        </div>
+                                    </h4>
+                                </a>
+                                <div class="{{#if or isNewCocktail (not cocktail.draft)}}active {{/if}}content">
+                                    <div class="required field">
+                                        <label>{{_ "name"}}</label>
+                                        <input value="{{cocktail.name}}" type="text" name="name" placeholder="Mojito" maxlength="30">
+                                    </div>
+                                    <div class="required field">
+                                        <label>{{_ "description"}}</label>
+                                        <textarea value="{{cocktail.description}}" name="description" rows="3"
+                                                  placeholder="{{_ "descriptionPlaceholder"}}" maxlength="120"></textarea>
+                                    </div>
+                                    <div class="required field">
+                                        <label>{{_ "tags"}}</label>
+                                        <div id="tags-dropdown" class="ui multiple search selection dropdown">
+                                            <input id="tags" type="hidden" name="tags">
+                                            <i class="dropdown icon"></i>
+                                            <div class="default text">{{_ "tagsPlaceholder"}}</div>
+                                            <div class="menu">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            {{/each}}
+                            </div>
+                        </div>
+                        {{#if nameExists}}
+                            <div class="ui red message">
+                                <i class="times icon"></i>
+                                {{_ "nameExists"}}
+                            </div>
+                            {{> cocktailListItem nameExists}}
+                        {{/if}}
+                    </div>
+                    <div class="column">
+                        <div class="ui fluid vertical accordion menu">
+                            <div class="item">
+                                <a class="{{#if or isNewCocktail (not cocktail.draft)}}active {{/if}}title">
+                                    <i class="dropdown icon"></i>
+                                    <h4 class="ui header">
+                                        <i class="list icon"></i>
+                                        <div class="content">
+                                            {{_ "instructions"}}
+                                        </div>
+                                    </h4>
+                                </a>
+                                <div class="{{#if or isNewCocktail (not cocktail.draft)}}active {{/if}}content">
+                                    <div class="field">
+                                        <label>{{_ "beforeMixing"}}.</label>
+                                        <textarea value="{{cocktail.beforeInstruction}}" name="beforeInstruction"
+                                                  rows="3"
+                                                  placeholder="{{_ "beforeMixingPlaceholder"}}" maxlength="120"></textarea>
+                                    </div>
+                                    <div class="field">
+                                        <label>{{_ "afterMixing"}}</label>
+                                        <textarea value="{{cocktail.afterInstruction}}" name="afterInstruction"
+                                                  rows="3" placeholder="{{_ "afterMixingPlaceholder"}}" maxlength="120"></textarea>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div id="add-ingredient" class="ui button">Add</div>
-                </div>
-            </div>
-            <div class="ui middle aligned divided list">
-            {{#each part in recipe}}
-                <div class="item">
-                    <div class="right floated content">
-                        <button data-id="{{part.ingredientId}}" class="remove-ingredient negative ui icon button">
-                            <i class="minus icon"></i>
-                        </button>
+                    <div class="column">
+                        <h4 class="ui top attached header">
+                            <i class="flask icon"></i>
+                            <div class="content">
+                                {{_ "recipe"}}
+                            </div>
+                        </h4>
+                        <div class="ui attached segment">
+                            <div class="ui {{getStrengthColor recipe}} ribbon label">
+                                {{getStrength recipe}}
+                                <div class="detail">{{getTotalAmount recipe}}ml</div>
+                            </div>
+                            <button type="button" id="add-ingredient" class="ui right floated button">{{_ "add"}}</button>
+                            <div id="amount-field" class="field">
+                                <label>{{_ "amount"}}</label>
+                                <div class="ui right labeled input">
+                                    <input id="amount" type="number" step="1" placeholder="40">
+                                    <div class="ui basic label">
+                                        ml
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="ingredient-field" class="field">
+                                <label>{{_ "ingredient"}}</label>
+                                <div id="ingredient-dropdown" class="ui search selection dropdown">
+                                    <input id="ingredient" type="hidden" name="ingredient">
+                                    <i class="dropdown icon"></i>
+                                    <div class="default text">{{_ "selectIngredient"}}</div>
+                                    <div class="menu">
+                                        {{#each ingredient in availableIngredients}}
+                                            <div class="inverted item" data-value="{{ingredient._id}}">
+                                                <span class="description">{{ingredient.vol}}{{_ "alcVol"}}</span>
+                                                <span class="text">{{ingredient.name}}</span>
+                                            </div>
+                                        {{/each}}
+                                        <div class="divider"></div>
+                                        <div class="header">{{_ "notAvailable"}}</div>
+                                        {{#each ingredient in notAvailableIngredients}}
+                                            <div class="inverted secondary item" data-value="{{ingredient._id}}">
+                                                <span class="description">{{ingredient.vol}}{{_ "alcVol"}}</span>
+                                                <span class="text">{{ingredient.name}}</span>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{#each part in recipe}}
+                            <div class="ui attached segment">
+                                <button type="button" data-id="{{part.ingredientId}}"
+                                        class="remove-ingredient right floated negative ui icon button">
+                                    <i class="trash icon"></i>
+                                </button>
+                                <strong>{{part.amount}}ml {{ingredientName part.ingredientId}}</strong><br>
+                                {{ingredientVol part.ingredientId}}{{_ "alcVol"}}
+                            </div>
+                        {{/each}}
+                        {{#if similarRecipeExists}}
+                            <div class="ui bottom attached yellow message">
+                                <i class="exclamation icon"></i>
+                                {{_ "similarRecipeExists"}}
+                            </div>
+                            {{> cocktailListItem similarRecipeExists}}
+                        {{/if}}
+                        <div class="ui error message"></div>
+                        <div class="ui hidden divider"></div>
+                        {{#if or (not cocktail) cocktail.draft}}
+                            <div class="popup-wrapper" data-content="{{getPopupText}}" data-position="bottom center">
+                                <div class="ui two buttons">
+                                    <button id="save-draft" class="ui {{#if (or hasNoRecipe (or (or notEnough tooMuch) (or nameExists isTooStrong)))}}disabled {{/if}}button" type="button">
+                                        <i class="pen square icon"></i>
+                                        {{_ "saveDraft"}}
+                                    </button>
+                                    <button class="positive ui {{#if (or hasNoRecipe (or (or notEnough tooMuch) (or nameExists isTooStrong)))}}disabled {{/if}}button" type="submit">
+                                        <i class="save icon"></i>
+                                        {{_ "savePublish"}}
+                                    </button>
+                                </div>
+                            </div>
+                            {{#if cocktail.draft}}
+                                <div class="ui horizontal divider">
+                                    {{_ "or"}}
+                                </div>
+                                <div class="popup-wrapper" data-content="{{#if isInQueue}}{{_ "isInQueue"}}{{/if}}" data-position="bottom center">
+                                    <button id="delete-draft" class="ui basic negative fluid {{#if isInQueue}}disabled {{/if}}button" type="button">
+                                        <i class="trash icon"></i>
+                                        {{_ "deleteDraft"}}
+                                    </button>
+                                </div>
+                            {{/if}}
+                        {{else}}
+                            <div class="popup-wrapper" data-content="{{getPopupText}}" data-position="bottom center">
+                                <button class="positive ui {{#if (or hasNoRecipe (or (or notEnough tooMuch) (or nameExists isTooStrong)))}}disabled {{/if}}fluid button" type="submit">
+                                    <i class="save icon"></i>
+                                    {{_ "save"}}
+                                </button>
+                            </div>
+                        {{/if}}
                     </div>
-                    <div class="header">{{part.amount}} ml of {{ingredientName part.ingredientId}}</div>
-                    {{ingredientVol part.ingredientId}}% Alc. Vol.
                 </div>
-            {{/each}}
-            </div>
-            <button class="ui button" type="submit">Save</button>
-        </form>
+            </form>
+        {{/let}}
     </div>
-    {{/let}}
 </template>

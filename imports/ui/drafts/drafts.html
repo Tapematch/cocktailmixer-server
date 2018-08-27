@@ -1,0 +1,29 @@
+<template name="draftsmenu">
+    <a href="/newdraft" id="new-cocktail" class="item">
+        <i class="plus icon"></i><span>{{_ "newDraft"}}</span>
+    </a>
+</template>
+
+<template name="drafts">
+    <div class="ui main container">
+        {{#if hasDrafts}}
+            <div class="ui stackable doubling three column centered grid">
+                {{#each getDrafts}}
+                <div class="column">
+                    {{> cocktailListItem}}
+                </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <div class="ui icon message">
+                <i class="inbox icon"></i>
+                <div class="content">
+                    <div class="header">
+                        {{_ "noDrafts"}}
+                    </div>
+                    <p>{{_ "noDraftsDescription"}}</p>
+                </div>
+            </div>
+        {{/if}}
+    </div>
+</template>

@@ -1,0 +1,16 @@
+cocktail: Cocktail
+editCocktail: Edit Cocktail
+created: created
+queueNotEnabled: Queue is not enabled. Please wait for an administrator.
+replaceInQueue: Replace cocktail in queue with this
+goToQueue: Go to queue and start mixing
+notAllIngredientsAvailable: This cocktail can not be mixed, because not every ingredient is available.
+addToQueue: Add to Queue
+addedToQueue: Cocktail added to Queue in __place__ place
+replacedInQueue: Cocktail replaced in queue
+comments: Comments
+addComments: Add Comment
+shareText: Take a look at this cocktail
+lastMixed: Did you like your __lastMixed__?
+favoriseOrComment: Favorise or leave a comment
+clickHereToFavorite: Click here to favorite this cocktail

@@ -1,0 +1,31 @@
+idle: Idle
+idleDescription: CocktailMixer is ready to mix the next cocktail.
+mixing: Mixing
+mixingDescription: CocktailMixer is currently mixing a cocktail.
+tare: Taring
+tareDescription: The scale is tared on the current weight.
+error: Error
+refilled: Refilled
+notConnectedStatus: Not connected
+notConnectedDescription: The CocktailMixer is not connected
+cocktailSettings: Cocktail Settings
+minAmount: Minimum amount
+maxAmount: Max Amount
+maxVol: Max Vol. Alc.
+mixerSettings: Mixer Settings
+minGlassWeight: Min Glass Weight
+checkIngredientTime: Check ingredient time
+seconds: seconds
+checkIngredientsWeight: Check ingredient weight
+unexpectedError: Unexpected error.
+valveEmpty: __ingredientname__ on valve __valve__ is empty. Please refill.
+ingredientEmpty: __ingredientname__ is empty!
+gram: gram
+tareScale: Tare Scale
+calibrateScale: Calibrate Scale
+startCalibrateInstructions: Make sure nothing is on the scale and press start.
+start: Start
+calibrateInstructions: Put 500g on the scale (for example by measuring water with another scale) and press calibrate.
+ingredientNotAvailable: Ingredient not available
+ingredientEmptyHeader: Ingredient is empty
+activateScaleMode: Activate scale mode

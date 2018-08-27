@@ -1,62 +1,204 @@
 <template name="queue">
-    <div class="ui grid">
-        {{#let queueItem=getQueueItem cocktail=getCurrentCocktail}}
+
+    <div class="ui main container">
+        <div class="ui grid">
+
             <div class="row">
                 <div class="column">
-                    {{#if isMine queueItem.user}}
-                        <div id="start-mixing" class="ui positive top attached raised button"
-                             tabindex="0">Start Mixing
-                        </div>
-                    {{/if}}
-                    <div class="ui attached {{#if isMine queueItem.user}}raised {{/if}}segment">
-                        <div class="ui medium header">{{cocktail.name}} - {{queueItem.status}} - {{queueItem.progress}}%</div>
-                        <p>Mixing {{getQueueItem.current.amount}}ml of {{getQueueItem.current.ingredientId}}</p>
-                        <div class="ui fluid steps">
-                            {{#if cocktail.beforeInstruction}}
-                                <div class="completed step">
+                    {{#if isItemInQueue}}
+                        {{#let queueItem=getCurrentQueueItem cocktail=getCurrentCocktail}}
+                            {{#if and (statusIs "next") (isMine queueItem.user) (isNotAvailable cocktail.recipe)}}
+                                <div class="ui top attached error icon message">
+                                    <i class="exclamation triangle icon"></i>
                                     <div class="content">
-                                        <div class="title">Before mixing...</div>
-                                        <div class="description">{{cocktail.beforeInstruction}}</div>
+                                        <div class="header">
+                                            {{_ "notAvailableAnymore"}}
+                                        </div>
+                                        <p>{{{_ "notAvailableAnymoreDescription"}}}</p>
+                                    </div>
+
+                                </div>
+                            {{else}}
+                                {{#if and (or (isInRole 'admin') (isMine queueItem.user)) (statusIs "next")}}
+                                    <div class="popup-wrapper" data-content="{{#if isQueueDisabled}}{{_ "queueNotEnabled"}}{{else}}{{#if not isMachineOnline}}{{_ "notConnected"}}{{/if}}{{/if}}"
+                                         data-position="top center">
+                                        <div id="start-mixing" class="ui positive top attached raised {{#if or isQueueDisabled (not isMachineOnline)}}disabled {{/if}}button"
+                                             tabindex="0">{{_ "startMixing"}}
+                                        </div>
+                                    </div>
+                                    <script>
+                                        $('.popup-wrapper').popup();
+                                    </script>
+                                {{/if}}
+                            {{/if}}
+                            <div class="ui attached {{#if isMine queueItem.user}}raised {{/if}}segment">
+                                {{#if or (isInRole 'admin') (isMine queueItem.user)}}
+                                    {{#if statusIs "start"}}
+                                        <div class="ui active dimmer">
+                                            <div class="ui huge loader"></div>
+                                        </div>
+                                    {{/if}}
+                                    {{#if statusIs "waitingforglass"}}
+                                        <div class="ui active dimmer">
+                                            <div class="content">
+                                                <h3 class="ui inverted header">
+                                                    <i class="icons">
+                                                        <i class="question circle icon"></i>
+                                                        <i class="inverted corner glass martini icon"></i>
+                                                    </i>
+                                                    {{_ "putGlass"}}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                    {{#if statusIs "completed"}}
+                                        <div class="ui active dimmer">
+                                            <div class="content">
+                                                <h3 class="ui inverted header">
+                                                    <i class="icons">
+                                                        <i class="check circle icon"></i>
+                                                        <i class="inverted corner glass martini icon"></i>
+                                                    </i>
+                                                    {{_ "finished"}}
+                                                    <div class="sub header">
+                                                        {{_ "takeGlass"}}{{#if cocktail.afterInstruction}} {{_ "and"}} {{cocktail.afterInstruction}}{{/if}}
+                                                    </div>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                    {{#if statusIs "canceled"}}
+                                        <div class="ui active dimmer">
+                                            <div class="content">
+                                                <h3 class="ui inverted header">
+                                                    <i class="icons">
+                                                        <i class="ban icon"></i>
+                                                        <i class="inverted corner glass martini icon"></i>
+                                                    </i>
+                                                    {{_ "canceled"}}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                    {{#if statusIs "error"}}
+                                        <div class="ui active dimmer">
+                                            <div class="content">
+                                                <h3 class="ui inverted header">
+                                                    <i class="huge icons">
+                                                        <i class="exclamation triangle icon"></i>
+                                                        <i class="inverted corner flask icon"></i>
+                                                    </i>
+                                                    {{_ "error"}}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                {{/if}}
+                                <div id="cancel-dimmer" class="ui dimmer">
+                                    <div class="content">
+                                        <h3 class="ui inverted header">
+                                            <i class="icons">
+                                                <i class="ban icon"></i>
+                                                <i class="inverted corner question icon"></i>
+                                            </i>
+                                            {{_ "reallyCancel"}}
+                                        </h3>
+                                        <div id="yes-cancel" class="ui negative button">{{_ "yes"}}</div>
+                                        <div id="no-cancel" class="ui button">{{_ "no"}}</div>
                                     </div>
                                 </div>
-                            {{/if}}
-                            <div class="active step">
-                                <div class="content">
-                                    <div class="title">Mixing</div>
-                                    {{#if isMine queueItem.user}}
-                                        <div class="description">Place Glass on Machine, Press Mixing</div>
+                                <div class="ui right floated image label">
+                                    <img src="{{userPicture queueItem.user}}">
+                                    {{userName queueItem.user}}
+                                </div>
+
+                                <a href="{{#if or (not cocktail.draft) (isMine cocktail.owner)}}/cocktail/{{queueItem.cocktailId}}{{/if}}" class="ui medium header">
+                                    {{cocktail.name}}
+                                    {{#if cocktail.draft}}
+                                        <div class="ui horizontal label">
+                                            <i class="pen square icon"></i> {{_ "draft"}}
+                                        </div>
+                                    {{/if}}
+                                </a>
+
+                                {{#if or (statusIs "mixing") (statusIs "completed")}}
+                                    <div id="queueprogress" class="ui top attached indicating progress">
+                                        <div class="bar"></div>
+                                    </div>
+                                {{/if}}
+
+
+                                <div class="ui fluid steps">
+                                    {{#if cocktail.beforeInstruction}}
+                                        <div class="{{#if statusIs "next"}}active {{/if}}{{#if statusIs "mixing"}}completed {{/if}}step">
+                                            <div class="content">
+                                                <div class="title">{{_ "beforeMixing"}}</div>
+                                                <div class="description">{{cocktail.beforeInstruction}}</div>
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                    <div class="{{#if statusIs "mixing"}}active {{else}}disabled {{/if}}step">
+                                        <div class="content">
+                                            <div class="title">{{_ "mixing"}}</div>
+                                            {{#if statusIs "mixing"}}
+                                                <div class="description">{{_ "mixingCurrent" amount=queueItem.current.amount ingredientName=(ingredientName queueItem.current.ingredientId)}}</div>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                    {{#if cocktail.afterInstruction}}
+                                        <div class="{{#if statusIs "completed"}}active {{else}}{{#if statusIs "mixing"}}disabled {{/if}}{{/if}}step">
+                                            <div class="content">
+                                                <div class="title">{{_ "afterMixing"}}</div>
+                                                <div class="description">{{cocktail.afterInstruction}}</div>
+                                            </div>
+                                        </div>
                                     {{/if}}
                                 </div>
+
                             </div>
-                            {{#if cocktail.afterInstruction}}
-                                <div class="disabled step">
-                                    <div class="content">
-                                        <div class="title">After mixing...</div>
-                                        <div class="description">{{cocktail.afterInstruction}}</div>
-                                    </div>
+                            {{#if and (statusIs "completed") (isMine queueItem.user) (not cocktail.draft) (not cocktail.images)}}
+                                <div class="ui bottom attached floating message">
+                                    <i class="camera icon"></i>
+                                    {{_ "noPictures"}} <a href="/cocktail/{{cocktail._id}}?uploadPicture=true">{{_ "uploadPicture"}}</a>.
                                 </div>
                             {{/if}}
-                        </div>
-
-                        <div class="ui image top right attached label">
-                            <img src="https://semantic-ui.com/images/avatar/small/joe.jpg">
-                            {{userName queueItem.user}}
-                        </div>
-
-
-                    </div>
-                    {{#if isMine queueItem.user}}
-                        <div id="cancel" class="ui negative bottom attached raised button"
-                             tabindex="0">Cancel
+                            {{#if and (or (isInRole 'admin') (isMine queueItem.user)) (not (or (statusIs "canceled") (statusIs "completed")))}}
+                                <div id="cancel" class="ui negative bottom attached raised button" tabindex="0">
+                                    {{_ "cancel"}}
+                                </div>
+                            {{/if}}
+                        {{/let}}
+                    {{else}}
+                        <div class="ui icon message">
+                            <i class="inbox icon"></i>
+                            <div class="content">
+                                <div class="header">
+                                    {{_ "nothingInQueue"}}
+                                </div>
+                                <p>{{_ "nothingInQueueDescription"}}</p>
+                            </div>
                         </div>
                     {{/if}}
                 </div>
             </div>
-        {{/let}}
 
-        {{#each queue}}
-            {{> queueItem}}
-        {{/each}}
+            {{#if isInQueue}}
+                <h4 style="height:0;" class="ui horizontal divider header">
+                    <i class="list ol icon"></i>
+                    {{_ "nextInQueue"}}
+                </h4>
+            {{/if}}
+
+            {{#each queue}}
+                {{> queueItem}}
+            {{/each}}
+
+            {{#if hasMore}}
+                <div id="showMoreResults" class="ui very padded basic segment">
+                    <div class="ui active text loader">{{_ "loadingMore"}}</div>
+                </div>
+            {{/if}}
+        </div>
     </div>
 </template>
 
@@ -64,42 +206,69 @@
     {{#let cocktail=getCocktail}}
         <div class="row">
             <div class="column">
-                <div class="ui attached {{#if isMine user}}raised {{/if}}segment">
-                    <div class="ui medium header">{{cocktail.name}}</div>
+                {{#if and (isMine user) (isNotAvailable cocktail.recipe)}}
+                    <div class="ui top attached error icon message">
+                        <i class="exclamation triangle icon"></i>
+                        <div class="content">
+                            <div class="header">
+                                {{_ "notAvailableAnymore"}}
+                            </div>
+                            <p>{{{_ "notAvailableAnymoreDescription"}}}</p>
+                        </div>
+
+                    </div>
+                {{/if}}
+                <div class="ui attached {{#if isMine user}}secondary {{else}}tertiary {{/if}}segment">
+
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <h3 class="ui inverted header">
+                                <i class="icons">
+                                    <i class="trash icon"></i>
+                                    <i class="inverted corner question icon"></i>
+                                </i>
+                                {{_ "reallyRemove"}}
+                            </h3>
+                            <div class="yes-remove ui negative button">{{_ "yes"}}</div>
+                            <div class="no-remove ui button">{{_ "no"}}</div>
+                        </div>
+                    </div>
+
+                    <div class="ui right floated image label">
+                        <img src="{{userPicture user}}">
+                        {{userName user}}
+                    </div>
+
+                    <a href="/cocktail/{{cocktail._id}}" class="ui medium header">{{cocktail.name}}</a>
                     <div class="ui fluid steps">
                         {{#if cocktail.beforeInstruction}}
                             <div class="active step">
                                 <div class="content">
-                                    <div class="title">Before mixing...</div>
+                                    <div class="title">{{_ "beforeMixing"}}</div>
                                     <div class="description">{{cocktail.beforeInstruction}}</div>
                                 </div>
                             </div>
                         {{/if}}
                         <div class="disabled step">
                             <div class="content">
-                                <div class="title">Mixing</div>
+                                <div class="title">{{_ "mixing"}}</div>
                             </div>
                         </div>
                         {{#if cocktail.afterInstruction}}
                             <div class="step">
                                 <div class="content">
-                                    <div class="title">After mixing...</div>
+                                    <div class="title">{{_ "afterMixing"}}</div>
                                     <div class="description">{{cocktail.afterInstruction}}</div>
                                 </div>
                             </div>
                         {{/if}}
                     </div>
 
-                    <div class="ui image top right attached label">
-                        <img src="https://semantic-ui.com/images/avatar/small/joe.jpg">
-                        {{userName user}}
-                    </div>
-
 
                 </div>
-                {{#if isMine user}}
-                    <div class="ui negative bottom attached raised button"
-                         tabindex="0">Remove from Queue
+                {{#if or (isInRole 'admin') (isMine user)}}
+                    <div class="remove-queue ui negative bottom attached raised button"
+                         tabindex="0">{{_ "removeFromQueue"}}
                     </div>
                 {{/if}}
             </div>
